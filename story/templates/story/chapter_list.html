@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for chapter in chapters %}
+        <a href="{% url 'chapter' slug chapter.chapter_number %}" class="list">Глава: {{chapter.chapter_number}} - {{ chapter.title }}</a>
+    {% endfor %}
+{% endblock %}

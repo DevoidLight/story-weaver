@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="chapter-container">
+        <h1 class="chapter-title">{{ chapter.title }}</h1>
+        <div class="chapter-text">
+            <p>
+                {{ chapter.text }}
+            </p>
+            
+            
+        </div>
+
+        <div class="navigation-buttons">
+            <a class="button" href="{% url 'chapter' slug previous_chapter %}">Предыдущая глава</a>
+            <a class="button" href="{% url 'chapter' slug next_chapter %}">Следующая глава</a>
+        </div>
+
+        <button class="toggle-chapters">Показать список глав</button>
+    </div>
+
+    <div class="chapter-list-modal" id="chapterListModal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Список глав</h2>
+            <ul>
+                {% for chapt in chapters %}
+                    <li><a class="list" href="{% url 'chapter' slug chapt.chapter_number %}">Глава: {{ chapt.chapter_number }} - {{ chapt.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const toggleButton = document.querySelector('.toggle-chapters');
+        const modal = document.getElementById('chapterListModal');
+        const closeButton = document.querySelector('.close-button');
+
+        toggleButton.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+{% endblock %}

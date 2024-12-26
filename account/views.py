@@ -51,10 +51,6 @@ def register(request):
                   'account/register.html',
                   {'user_form': user_form})
 
-def pagelogout(request):
-    logout(request)
-    return render(request, 'registration/logout.html')
-
 
 @login_required
 def dashboard(request):
