@@ -1,8 +1,35 @@
 {% extends 'base.html' %}
+{% load static %}
 
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/style_form.css' %}">
+{% endblock %}
 
 {% block content %}
     {% for story in stories %}
-        <a href="{% url 'chapter_list' story.id %}" class="list">{{ story.title }}</a>
+        <a href="{% url 'chapter_list' story.slug %}" class="list">{{ story.title }}</a>
     {% endfor %}
+    <button class="create-chapter">Добавить историю</button>
+    <form class="form_modal" id="form-create-story" method="post">
+        <span class="close-button">&times;</span>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Добавить">
+    </form>
+{% endblock %}
+
+{% block js %}
+<script>
+    const createButton = document.querySelector('.create-chapter')
+    const createForm = document.getElementById('form-create-story')
+    const closeButton = document.querySelector('.close-button')
+
+    createButton.addEventListener('click', () => {
+        createForm.style.display = 'block';
+    })
+
+    closeButton.addEventListener('click', () => {
+        createForm.style.display = 'none';
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,79 @@
+
+/* Стили для формы */
+.form_modal {
+    display: none;
+    background-color: #f9f9f9; /* Светлый фон для формы */
+    border-radius: 8px; /* Закругленные углы */
+    padding: 20px; /* Отступы внутри формы */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    max-width: 100%; /* Максимальная ширина формы */
+    margin: 20px auto; /* Центрирование формы */
+}
+
+/* Стили для текстового поля */
+.text_input {
+    width: 98%; /* Занять всю ширину */
+    padding: 10px; /* Отступы внутри текстового поля */
+    border: 1px solid #ccc; /* Светлая граница */
+    border-radius: 4px; /* Закругленные углы */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Плавный переход для границы и тени */
+}
+
+.number_input {
+    width: 98%;  /* Ширина 100% для адаптивности */
+    padding: 10px;  /* Отступы внутри поля */
+    border: 1px solid #ccc;  /* Цвет границы */
+    border-radius: 5px;  /* Закругленные углы */
+    font-size: 16px;  /* Размер шрифта */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);  /* Легкая тень */
+}
+
+.number_input:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Тень при фокусе */
+    outline: none; /* Убираем стандартный контур */
+}
+
+/* Эффект при фокусе на текстовом поле */
+.text_input:focus {
+    border-color: #007bff; /* Цвет границы при фокусе */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Тень при фокусе */
+    outline: none; /* Убираем стандартный контур */
+}
+
+/* Стили для кнопки submit */
+input[type="submit"] {
+    background-color: #007bff; /* Зеленый фон */
+    color: white; /* Белый текст */
+    border: none; /* Без границы */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    border-radius: 4px; /* Закругленные углы */
+    cursor: pointer; /* Указатель при наведении */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавный переход для фона и трансформации */
+}
+
+/* Эффект при наведении на кнопку */
+input[type="submit"]:hover {
+    background-color: #043b75; /* Темнее зеленый при наведении */
+    transform: translateY(-2px); /* Подъем кнопки при наведении */
+}
+
+/* Эффект при нажатии на кнопку */
+input[type="submit"]:active {
+    transform: translateY(0); /* Возврат кнопки в исходное положение */
+}
+
+.create-chapter:hover {
+    background-color: #0056b3;
+}
+
+.create-chapter {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    margin-top: 10px;
+}

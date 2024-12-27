@@ -1,23 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.text import slugify
-
-# Create your models here.
-class Genre(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+from .utils import generate_slug
 
 
 class Story(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200)
-    genre = models.ManyToManyField(Genre, related_name='stories')
+    slug = models.SlugField(null=True, blank=True, unique=True)
     author = models.ForeignKey(User, related_name='stories', on_delete=models.CASCADE)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = generate_slug(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -26,18 +21,22 @@ class Story(models.Model):
 class Chapter(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
-    text = models.TextField()
-    chapter_number = models.IntegerField()
+    chapter_number = models.IntegerField(unique=True)
     story = models.ForeignKey(Story, related_name='chapters', on_delete=models.CASCADE)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = generate_slug(self.title)
         super().save(*args, **kwargs)
 
-
+class Scene(models.Model):
+    title = models.CharField(max_length=200)
+    text = models.TextField()
+    chapter = models.ForeignKey(Chapter, related_name='scenes', on_delete=models.CASCADE)
+    create = models.DateTimeField(auto_now_add=True)
+    update = models.DateTimeField(auto_now=True)
 
 class Version(models.Model):
     chapter = models.ForeignKey(Chapter, related_name='versions', on_delete=models.CASCADE)

@@ -12,8 +12,12 @@
         </div>
 
         <div class="navigation-buttons">
-            <a class="button" href="{% url 'chapter' slug previous_chapter %}">Предыдущая глава</a>
-            <a class="button" href="{% url 'chapter' slug next_chapter %}">Следующая глава</a>
+            {% if previous_chapter %}
+                <a class="button" href="{% url 'chapter' slug previous_chapter %}">Предыдущая глава</a>
+            {% endif %}
+            {% if next_chapter %}
+                <a class="button" href="{% url 'chapter' slug next_chapter %}">Следующая глава</a>
+            {% endif %}    
         </div>
 
         <button class="toggle-chapters">Показать список глав</button>

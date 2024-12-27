@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Story, Chapter
+from .forms import *
 
 # Create your views here.
 def home_page(request):
@@ -7,14 +8,33 @@ def home_page(request):
 
 
 def story_list(request):
-    story = Story.objects.all()
-    return render(request, 'story/story_list.html', {'stories': story})
+    stories = Story.objects.all()
+    if request.method == 'POST':
+        form = CreateStoryForm(request.POST)
+        if form.is_valid():
+            new_story = form.save(commit=False)
+            new_story.author = request.user
+            new_story.save()
+            return redirect('story_list')
+    else:
+        form = CreateStoryForm()
+    return render(request, 'story/story_list.html', {'stories': stories, 'form': form})
 
-def chapter_list(request, story_id):
-    story = Story.objects.get(id=story_id)
+def chapter_list(request, title):
+    story = Story.objects.get(slug=title)
     chapters = Chapter.objects.filter(story=story)
+    if request.method == 'POST':
+        form = CreateChapterForm(request.POST)
+        if form.is_valid():
+            new_chapter = form.save(commit=False)
+            new_chapter.story = story
+            new_chapter.save()
+            return redirect('chapter_list', title)
+    else:
+        form = CreateChapterForm()
     return render(request, 'story/chapter_list.html', {'chapters': chapters,
-                                                       'slug': story.slug})
+                                                       'slug': story.slug,
+                                                       'form': form})
 
 
 def chapter(request, title, chapter_number):
@@ -27,5 +47,5 @@ def chapter(request, title, chapter_number):
     return render(request, 'story/chapter.html', {'chapter': chapter,
                                                   'chapters': chapters,
                                                   'slug': story.slug,
-                                                  'previous_chapter': previous_chapter.chapter_number if previous_chapter else chapter_number,
-                                                  'next_chapter': next_chapter.chapter_number if next_chapter else chapter_number,})
+                                                  'previous_chapter': previous_chapter.chapter_number if previous_chapter else None,
+                                                  'next_chapter': next_chapter.chapter_number if next_chapter else None,})

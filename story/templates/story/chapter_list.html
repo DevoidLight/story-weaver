@@ -1,7 +1,36 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/style_form.css' %}">
+{% endblock %}
+
 {% block content %}
     {% for chapter in chapters %}
         <a href="{% url 'chapter' slug chapter.chapter_number %}" class="list">Глава: {{chapter.chapter_number}} - {{ chapter.title }}</a>
     {% endfor %}
+    <button class="create-chapter">Добавить главу</button>
+    <form class="form_modal" id="form-create-chapter" method="post">
+        <span class="close-button">&times;</span>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Добавить">
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script>
+        const createButton = document.querySelector('.create-chapter')
+        const createForm = document.getElementById('form-create-chapter')
+        const closeButton = document.querySelector('.close-button')
+
+        createButton.addEventListener('click', () => {
+            createForm.style.display = 'block';
+        })
+
+        closeButton.addEventListener('click', () => {
+            createForm.style.display = 'none';
+        });
+    </script>
 {% endblock %}
