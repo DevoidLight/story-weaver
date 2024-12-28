@@ -1,5 +1,5 @@
 from django import forms
-from .models import Story, Chapter
+from .models import Story, Chapter, Scene
 
 
 class CreateStoryForm(forms.ModelForm):
@@ -26,6 +26,24 @@ class CreateChapterForm(forms.ModelForm):
                 }),
             'chapter_number': forms.NumberInput(attrs={
                 'placeholder': 'Введите номер главы',
+                'class': 'number_input',
+                'min': '1'
+                })
+        }
+
+
+class CreateSceneForm(forms.ModelForm):
+    class Meta:
+        model = Scene
+        fields = ['title', 'scene_number']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'placeholder': 'Введите название сцены',
+                'class': 'text_input', 
+                'maxlength': '200'
+                }),
+            'scene_number': forms.NumberInput(attrs={
+                'placeholder': 'Введите номер сцены',
                 'class': 'number_input',
                 'min': '1'
                 })

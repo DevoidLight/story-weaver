@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/style_form.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class="chapter-container">
         <h1 class="chapter-title">{{ chapter.title }}</h1>
         <div class="chapter-text">
-            <p>
-                {{ chapter.text }}
-            </p>
-            
-            
+            {% for scen in scene %}
+                <h4>{{ scen.title }}</h4>
+                <p>{{ scen.text }}</p>
+            {% endfor %}
         </div>
 
         <div class="navigation-buttons">
@@ -19,6 +23,13 @@
                 <a class="button" href="{% url 'chapter' slug next_chapter %}">Следующая глава</a>
             {% endif %}    
         </div>
+        <button class="create-chapter">Добавить сцену</button>
+        <form class="form_modal" id="form-create-chapter" method="post">
+            <span class="close-button-create">&times;</span>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Добавить">
+        </form>
 
         <button class="toggle-chapters">Показать список глав</button>
     </div>
@@ -34,24 +45,39 @@
             </ul>
         </div>
     </div>
+{% endblock %}
 
-    <script>
-        const toggleButton = document.querySelector('.toggle-chapters');
-        const modal = document.getElementById('chapterListModal');
-        const closeButton = document.querySelector('.close-button');
+{% block js %}
+<script>
+    const createButton = document.querySelector('.create-chapter')
+    const createForm = document.getElementById('form-create-chapter')
+    const closeButtonCreate = document.querySelector('.close-button-create')
 
-        toggleButton.addEventListener('click', () => {
-            modal.style.display = 'block';
-        });
+    createButton.addEventListener('click', () => {
+        createForm.style.display = 'block';
+    })
 
-        closeButton.addEventListener('click', () => {
+    closeButtonCreate.addEventListener('click', () => {
+        createForm.style.display = 'none';
+    });
+</script>
+<script>
+    const toggleButton = document.querySelector('.toggle-chapters');
+    const modal = document.getElementById('chapterListModal');
+    const closeButton = document.querySelector('.close-button');
+
+    toggleButton.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
             modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    </script>
+        }
+    });
+</script>
 {% endblock %}

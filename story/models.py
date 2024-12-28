@@ -4,8 +4,14 @@ from .utils import generate_slug
 
 
 class Story(models.Model):
+    class Status(models.TextChoices):
+        PRIVATE = 'PR', 'Private'
+        PUBLIC = 'PU', 'Public'
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(null=True, blank=True, unique=True)
+    desctiption = models.TextField()
+    status = models.CharField(max_length=2, choices=Status.choices, default=Status.PUBLIC)
     author = models.ForeignKey(User, related_name='stories', on_delete=models.CASCADE)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
@@ -34,6 +40,7 @@ class Chapter(models.Model):
 class Scene(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
+    scene_number = models.IntegerField(unique=True)
     chapter = models.ForeignKey(Chapter, related_name='scenes', on_delete=models.CASCADE)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)

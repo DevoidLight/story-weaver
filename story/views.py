@@ -44,8 +44,20 @@ def chapter(request, title, chapter_number):
     chapter_index = next((index for index, chap in enumerate(chapters) if chap.chapter_number == chapter_number), None)    
     previous_chapter = chapters[chapter_index - 1] if chapter_index > 0 else None
     next_chapter = chapters[chapter_index + 1] if chapter_index < len(chapters) - 1 else None
+    scene = Scene.objects.filter(chapter=chapter)
+    if request.method == 'POST':
+        form = CreateSceneForm(request.POST)
+        if form.is_valid():
+            new_scene = form.save(commit=False)
+            new_scene.chapter = chapter
+            new_scene.save()
+            return redirect('chapter', title, chapter_number)
+    else:
+        form = CreateSceneForm()
     return render(request, 'story/chapter.html', {'chapter': chapter,
                                                   'chapters': chapters,
                                                   'slug': story.slug,
                                                   'previous_chapter': previous_chapter.chapter_number if previous_chapter else None,
-                                                  'next_chapter': next_chapter.chapter_number if next_chapter else None,})
+                                                  'next_chapter': next_chapter.chapter_number if next_chapter else None,
+                                                  'form': form,
+                                                  'scene': scene})
