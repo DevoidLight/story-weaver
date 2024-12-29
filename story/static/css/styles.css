@@ -169,14 +169,28 @@ header a:hover {
     text-decoration: underline;
 }
 
-.close-button {
+.close-button, .close-button-create {
     cursor: pointer;
     float: right;
     font-size: 24px;
     color: #aaa;
 }
 
-.close-button:hover {
+.close-button:hover, .close-button-create:hover {
     color: #000;
 }
 
+.text-scene-input {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 150px; /* Минимальная высота блока */
+    width: 100%; /* Ширина блока */
+    background-color: #f9f9f9; /* Цвет фона */
+    cursor: text; /* Курсор при наведении */
+    transition: border-color 0.3s;
+}
+
+.text-scene-input:focus {
+    border-color: #007BFF; /* Цвет рамки при фокусе */
+    outline: none; /* Убираем стандартный контур */
+}

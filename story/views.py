@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Story, Chapter
 from .forms import *
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 def home_page(request):
@@ -44,20 +46,41 @@ def chapter(request, title, chapter_number):
     chapter_index = next((index for index, chap in enumerate(chapters) if chap.chapter_number == chapter_number), None)    
     previous_chapter = chapters[chapter_index - 1] if chapter_index > 0 else None
     next_chapter = chapters[chapter_index + 1] if chapter_index < len(chapters) - 1 else None
-    scene = Scene.objects.filter(chapter=chapter)
+    scenes = Scene.objects.filter(chapter=chapter)
     if request.method == 'POST':
         form = CreateSceneForm(request.POST)
         if form.is_valid():
             new_scene = form.save(commit=False)
             new_scene.chapter = chapter
             new_scene.save()
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f'scene_updates_{title}_{chapter_number}',
+                {
+                    'type': 'send_scene_update',
+                    'scene_data': {
+                        'scene_number': new_scene.scene_number,
+                        'text': new_scene.text,
+                        'title': new_scene.title,
+                    }
+                }
+            )
+
             return redirect('chapter', title, chapter_number)
+            return redirect('chapter', title, chapter_number)
+        text = request.POST.get('text')
+        scene_number = request.POST.get('scene_number')
+        scene = Scene.objects.get(scene_number=scene_number, chapter=chapter)
+        scene.text = text
+        scene.save()
     else:
         form = CreateSceneForm()
-    return render(request, 'story/chapter.html', {'chapter': chapter,
-                                                  'chapters': chapters,
-                                                  'slug': story.slug,
-                                                  'previous_chapter': previous_chapter.chapter_number if previous_chapter else None,
-                                                  'next_chapter': next_chapter.chapter_number if next_chapter else None,
-                                                  'form': form,
-                                                  'scene': scene})
+    return render(request, 'story/chapter.html', {
+        'chapter': chapter,
+        'chapters': chapters,
+        'slug': story.slug,
+        'previous_chapter': previous_chapter.chapter_number if previous_chapter else None,
+        'next_chapter': next_chapter.chapter_number if next_chapter else None,
+        'form': form,
+        'scenes': scenes,
+    })

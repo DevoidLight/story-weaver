@@ -9,10 +9,16 @@
     <div class="chapter-container">
         <h1 class="chapter-title">{{ chapter.title }}</h1>
         <div class="chapter-text">
-            {% for scen in scene %}
+            {% for scen in scenes %}
                 <h4>{{ scen.title }}</h4>
                 <p>{{ scen.text }}</p>
-            {% endfor %}
+                <form id="text-scene-created-{{ scen.scene_number }}" method="post">
+                    {% csrf_token %}
+                    <input type="text" class="text-scene-input" name="text" value="{{ scen.text }}">
+                    <input type="hidden" name="scene_number" value="{{ scen.scene_number }}">
+                    <input type="submit" value="Отправить">
+                </form>
+            {% endfor %}    
         </div>
 
         <div class="navigation-buttons">
@@ -48,36 +54,28 @@
 {% endblock %}
 
 {% block js %}
+{{ chapter.slug|json_script:"json-chaptername" }}
+{{ chapter.chapter_number|json_script:"json-chapternumber" }}
 <script>
-    const createButton = document.querySelector('.create-chapter')
-    const createForm = document.getElementById('form-create-chapter')
-    const closeButtonCreate = document.querySelector('.close-button-create')
+    const chapterName = JSON.parse(document.getElementById('json-chaptername').textContent)
+    const chapterNumber = JSON.parse(document.getElementById('json-chapternumber').textContent)
+    const sceneSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+        + chapterName
+        + '/'
+        + chapterNumber
+        + '/'
+    )
 
-    createButton.addEventListener('click', () => {
-        createForm.style.display = 'block';
-    })
+    sceneSocket.onmessage = function(e) {
+        console.log('onmessage')
+    }
 
-    closeButtonCreate.addEventListener('click', () => {
-        createForm.style.display = 'none';
-    });
+    sceneSocket.oncloce = function(e) {
+        console.log('oncloce')
+    }
 </script>
-<script>
-    const toggleButton = document.querySelector('.toggle-chapters');
-    const modal = document.getElementById('chapterListModal');
-    const closeButton = document.querySelector('.close-button');
 
-    toggleButton.addEventListener('click', () => {
-        modal.style.display = 'block';
-    });
-
-    closeButton.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-</script>
 {% endblock %}

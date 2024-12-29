@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'story.apps.StoryConfig',
 ]
 
@@ -69,18 +70,24 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'story_weaver.wsgi.application'
+ASGI_APPLICATION = 'story_weaver.asgi.application'  
 
-
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'storyWeaver',
+        'NAME': 'storyweaver',
         'USER': 'blacknuar',
-        'PASSWORD': 'Af230508'
+        'PASSWORD': 'Af230508',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

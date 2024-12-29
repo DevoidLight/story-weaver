@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Story, Chapter, Version, Collaboration
+from .models import Story, Chapter, Version, Collaboration, Scene
 
 # Register your models here.
 
@@ -16,3 +16,4 @@ class ChapterAdmin(admin.ModelAdmin):
 
 admin.site.register(Version)
 admin.site.register(Collaboration)
+admin.site.register(Scene)

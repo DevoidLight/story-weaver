@@ -77,3 +77,18 @@ input[type="submit"]:active {
     color: white;
     margin-top: 10px;
 }
+
+.text-scene-input {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 150px; /* Минимальная высота блока */
+    width: 100%; /* Ширина блока */
+    background-color: #f9f9f9; /* Цвет фона */
+    cursor: text; /* Курсор при наведении */
+    transition: border-color 0.3s;
+}
+
+.text-scene-input:focus {
+    border-color: #007BFF; /* Цвет рамки при фокусе */
+    outline: none; /* Убираем стандартный контур */
+}
